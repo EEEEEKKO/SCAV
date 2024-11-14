@@ -4,7 +4,7 @@
 
 <p>
     <a href="https://arxiv.org/abs/2404.12038" target="_blank">
-        <img alt="paper" src="https://img.shields.io/badge/cs.CL-	arXiv:2404.12038-red">
+        <img src="https://img.shields.io/badge/cs.CL-2404.12038-b31b1b?logo=arxiv&logoColor=red" alt="arXiv"/>
     </a>
     <a href="mailto:xitingwang@ruc.edu.cn" target="_blank">
         <img alt="email" src="https://img.shields.io/badge/📮 enquiry-blue">
