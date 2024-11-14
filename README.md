@@ -2,14 +2,14 @@
 
 # AI-Safety SCAV
 
-<div>
+<p>
     <a href="https://arxiv.org/abs/2404.12038" target="_blank">
         <img alt="paper" src="https://img.shields.io/badge/cs.CL-	arXiv:2404.12038-red">
     </a>
     <a href="mailto:xitingwang@ruc.edu.cn" target="_blank">
         <img alt="email" src="https://img.shields.io/badge/📮 enquiry-blue">
     </a>
-</div>
+</p>
 
 </div>
 
