@@ -17,6 +17,7 @@ This is the code for our NeurIPS 2024 paper *<strong>Uncovering Safety Risks of 
 
 ## News
 
+- [2024-11-17] The code for visualization of embedding-level attack is released.
 - [2024-10-28] The code for prompt-level attack is released.
 - [2024-09-30] The code for embedding-level attack is released.
 - [2024-04-18] The paper is available on arXiv.
