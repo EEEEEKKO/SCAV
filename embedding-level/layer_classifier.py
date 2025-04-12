@@ -36,6 +36,9 @@ class LayerClassifier:
 
     def predict_proba(self, tensor: torch.tensor) -> torch.tensor:
         w, b = self.get_weights_bias()
+        device = tensor.device
+        w = w.to(device)
+        b = b.to(device)
         return torch.sigmoid(tensor @ w.T + b)
         
     def evaluate_testacc(self, pos_tensor: torch.tensor, neg_tensor: torch.tensor) -> float:

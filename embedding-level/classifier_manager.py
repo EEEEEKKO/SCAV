@@ -77,13 +77,15 @@ class ClassifierManager:
         layer: int,
         target_prob: float=0.001,
     ):
+        device = embds_tensor.device
         w, b = self.classifiers[layer].get_weights_bias()
+        w = w.to(device)
+        b = b.to(device)
         logit_target = torch.log(torch.tensor(target_prob / (1 - target_prob)))
         w_norm = torch.norm(w)
-
         epsilon = (logit_target - b - torch.sum(embds_tensor * w, dim=1)) / w_norm
         perturbation = epsilon * w / w_norm
-
+        
         return embds_tensor + perturbation
     
 def load_classifier_manager(file_path: str):

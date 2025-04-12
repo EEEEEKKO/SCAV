@@ -1,13 +1,19 @@
 __cfg = {
-    'llama2-7b': {
-        'model_nickname': 'llama2-7b',
+    'llama2-7b-chat': {
+        'model_nickname': 'llama2-7b-chat',
         'model_name': 'meta-llama/Llama-2-7b-chat-hf', 
         'n_layer': 32, 
         'n_dimension': 4096
     }, 
-    'llama3-8b': {
-        'model_nickname': 'llama3-8b',
-        'model_name': 'meta-llama/Meta-Llama-3-8B-Instruct', 
+    'llama2-7b-base':{
+        'model_nickname': 'llama2-7b-base',
+        'model_name': 'meta-llama/Llama-2-7b-hf', 
+        'n_layer': 32, 
+        'n_dimension': 4096
+    },
+    'llama3-8b-instruct': {
+        'model_nickname': 'llama3-8b-instruct',
+        'model_name': 'meta-llama/Llama-3.1-8B-Instruct', 
         'n_layer': 32, 
         'n_dimension': 4096
     }, 

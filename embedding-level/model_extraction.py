@@ -4,8 +4,8 @@ from tqdm import tqdm
 import torch
 
 class ModelExtraction(ModelBase):
-    def __init__(self, model_nickname: str):
-        super().__init__(model_nickname)
+    def __init__(self, model_nickname: str, device: str = "cuda"):
+        super().__init__(model_nickname, device)
 
     def extract_embds(self, inputs: list[str], system_message: str=None, message: str=None) -> EmbeddingManager:
         embds_manager = EmbeddingManager(self.llm_cfg, message)
