@@ -78,7 +78,7 @@ class ModelGeneration(ModelBase):
     def generate(
         self, 
         prompt: str, 
-        max_length: int=1000, 
+        max_length: int=1024, 
         capture_perturbed_outputs: bool=True,
         capture_original_outputs: bool=True,
     ) -> dict:
@@ -109,6 +109,8 @@ class ModelGeneration(ModelBase):
             return_dict_in_generate=True,
             eos_token_id=terminators,
             do_sample=False,
+            temperature=1.0,
+            top_p=1.0,
         )
 
         result = {
