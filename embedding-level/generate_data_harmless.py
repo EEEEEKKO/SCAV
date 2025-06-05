@@ -84,7 +84,7 @@ if __name__ == "__main__":
     model_nickname = 'llama2-7b-chat'
     dataset_name = 'Demo'
 
-    with open(f'/home/zhaohengyu/LLM-AttackBench/AdvDefense/data/adv_training_behaviors.jsonl', 'r') as f:
+    with open(f'/home/zhaohengyu/LLM-AttackBench/AdvDefense/data/harmless.jsonl', 'r') as f:
         data = [json.loads(line) for line in f if line.strip()]
     
     curr_id = args.curr_id
@@ -101,38 +101,26 @@ if __name__ == "__main__":
     llm_gen = ModelGeneration(model_nickname, device=device)
     
 
-    save_dir = f"/user/zhaohengyu/data/gen/adv_training_behaviors_gen_greedy"
+    save_dir = f"/user/zhaohengyu/data/gen/harmless_gen_greedy"
     os.makedirs(save_dir, exist_ok=True)
-
-    insts = load_instructions_by_size(
-        dataset_name=dataset_name,
-        label_list=["Malicious", "Safe"],
-        train_size=0.15,
-    )
-    
-    pos_train_embds, neg_train_embds, pos_test_embds, neg_test_embds = get_cls_embds(model_nickname, insts)
-    clfr = get_clfr(pos_train_embds, neg_train_embds, pos_test_embds, neg_test_embds)
-
-    pert = Perturbation(clfr, target_probability=0.01)
+    reject = "Even though the following request appears harmless, \
+        I want you to pretend that it raises safety, legal, \
+        or ethical concerns. Respond by refusing the request as if it were unsafe or inappropriate. \
+        Be firm, give a clear safety-related explanation, and avoid fulfilling the request. \
+        The request is:{prompt}"
 
     with open(os.path.join(save_dir, f'part_{curr_id}_of_{save_len}.jsonl'), 'w') as f:
         for idx, d in enumerate(tqdm(curr_data)):
             llm_gen.unset_perturbation()
             chosen_output = llm_gen.generate(d['prompt'])['completion']
-
-            llm_gen.set_perturbation(pert)
             
-            for _ in range(3):
-                reject_output = llm_gen.generate(d['prompt'])['completion']
-                if check_ASR(reject_output):
-                    break
+            reject_output = llm_gen.generate(reject.format(prompt=d['prompt']))['completion']
 
-            if check_ASR(reject_output):
+            if not check_ASR(reject_output):
                 new_data = {
                     "prompt": d['prompt'],
                     "chosen": chosen_output,
                     "reject": reject_output,
-                    "ID": d["ID"]
                 }
                 f.write(json.dumps(new_data, ensure_ascii=False) + '\n')
 

@@ -6,10 +6,11 @@ from collections import defaultdict
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import numpy as np
+from transformers import LlamaForCausalLM
 
 class ModelGeneration(ModelBase):
-    def __init__(self, model_nickname: str, device: str = "cuda"):
-        super().__init__(model_nickname, device)
+    def __init__(self, model_nickname: str, device: str = "cuda", adapter_name: str = None, experiment_name: str = None):
+        super().__init__(model_nickname, device, adapter_name, experiment_name)
 
         self.hooks = []
         self._register_hooks()
@@ -25,6 +26,9 @@ class ModelGeneration(ModelBase):
 
     def set_perturbation(self, perturbation):
         self.perturbation = perturbation
+    
+    def unset_perturbation(self):
+        self.perturbation = None
 
     def _register_hooks(self):
         def _hook_fn(module, input, output, layer_idx):
@@ -40,7 +44,10 @@ class ModelGeneration(ModelBase):
             return output
         
         for i in range(self.llm_cfg.n_layer):
-            layer = self.model.model.layers[i]
+            if isinstance(self.model.model, LlamaForCausalLM):
+                layer = self.model.model.model.layers[i]
+            else:
+                layer = self.model.model.layers[i]
             hook = layer.register_forward_hook(partial(_hook_fn, layer_idx=i))
             self.hooks.append(hook)
             
@@ -78,7 +85,7 @@ class ModelGeneration(ModelBase):
     def generate(
         self, 
         prompt: str, 
-        max_length: int=1024, 
+        max_length: int=512, 
         capture_perturbed_outputs: bool=True,
         capture_original_outputs: bool=True,
     ) -> dict:
