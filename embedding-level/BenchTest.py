@@ -30,15 +30,15 @@ if __name__ == "__main__":
     # train_type = 'standard'
     # ds = load_dataset("walledai/HarmBench", train_type)
 
-    test_path = "harmless.jsonl"
+    test_path = "advbench_data.jsonl"
     with open(test_path, 'r') as f:
         data = [json.loads(line) for line in f if line.strip()]
 
     data = data[:20]
 
-    model_nickname = 'llama2-7b-chat'
+    model_nickname = 'llama3-8b-instruct'
     dataset_name = 'Demo'
-    experiment_name = "Llama-2-7b-CAT-merged"
+    experiment_name = "Llama-3.1-8B-Instruct/simpo_checkpoint_24_sigmoid_0.0002_2.5_0.55_0.0_q_proj"
 
     insts = load_instructions_by_size(
         dataset_name=dataset_name,
@@ -53,8 +53,8 @@ if __name__ == "__main__":
 
     llm_gen = ModelGeneration(model_nickname, device='cuda:1', adapter_name=None, experiment_name=experiment_name)
 
-    save_dir = "/user/zhaohengyu/CodeSpace/bench_results/SCAV"
-    os.makedirs(save_dir, exist_ok=True)
+    save_dir = "/user/zhaohengyu/CodeSpace/bench_results/SCAV/Llama-3.1-8B-Instruct"
+    os.makedirs(f"{save_dir}", exist_ok=True)
 
 
     if "harmless" in test_path.split(".")[0]:
@@ -62,8 +62,9 @@ if __name__ == "__main__":
     elif "adv" in test_path.split(".")[0]:
         print("Setting perturbation...")
         llm_gen.set_perturbation(pert)
+    
 
-    with open(os.path.join(save_dir, f'{experiment_name}_{test_path.split(".")[0]}.jsonl'), 'w') as f:
+    with open(os.path.join(save_dir, f'{experiment_name.split("/")[-1]}_{test_path.split(".")[0]}.jsonl'), 'w') as f:
         for idx, data in enumerate(tqdm(data)):
 
             output = llm_gen.generate(data['prompt'])
